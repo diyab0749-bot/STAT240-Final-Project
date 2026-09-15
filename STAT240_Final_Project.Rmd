@@ -1,0 +1,76 @@
+---
+title: "Final Project Report"
+author: "Quinten Beyer, Diya Bhat, Sam Fortier, Katie Krause"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+library(dplyr)
+
+student_lifestyle_dataset <- read.csv("student_lifestyle_dataset 2.csv")
+```
+
+## Introduction
+
+In university, sleep is often considered an important factor for academic success because it affects concentration, memory, and energy. Many students believe that getting more sleep causes better grades, therefore resulting in a stronger school performance. This report asks and examines: is there a significant positive correlation between sleep duration in hours and GPA, indicating that consistent sleep habits improve academic performance? Using Kaggle data from the Student Lifestyle Dataset, our group’s analysis found that there is no meaningful correlation between sleep duration and GPA. This suggests that sleep hours solely may not be a strong predictor of academic performance.
+
+## Background
+In order to answer our question, we need to know from a sample of students what GPA they have and how many hours they sleep on average.
+
+Student Lifestyle Data Set
+Our dataset is on the daily lifestyle and academic performance of students. It shows a detailed view of the correlation between student lifestyle patterns and GPA. The dataset contains 2,000 results detailed with extracurriculars, sleep, socializing, and physical activity. While it does have all of this information, we only pulled the values of sleep and GPA.
+
+This dataset was collected and authored by Sumit Kumar. Students were surveyed from different higher education institutions across South Asia from August 2023 to May 2024 via self reported Google Forms.
+
+## Statistical Analysis
+Initial Impressions
+
+To examine the relationship between sleep duration and academic performance, we first constructed a scatterplot of GPA against Sleep Hours Per Day. The plot below reveals a highly dispersed cloud of data points with no discernible upward or downward trend. 
+
+```{r}
+ggplot(student_lifestyle_dataset, aes(x = Sleep_Hours_Per_Day, y = GPA)) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(method = "lm", se = FALSE, color = "blue") +
+  labs(title = "Sleep Hours vs. GPA",
+       subtitle = paste("Correlation (r) =",
+                         round(cor(student_lifestyle_dataset$Sleep_Hours_Per_Day,
+                                   student_lifestyle_dataset$GPA), 4)),
+       x = "Sleep Hours Per Day",
+       y = "GPA") +
+  theme_minimal()
+```
+Statistical Model
+We performed a simple linear regression to quantify the effect of sleep on GPA. 
+
+```{r}
+student_mod <- lm(GPA ~ Sleep_Hours_Per_Day, data = student_lifestyle_dataset)
+summary(student_mod)
+```
+The resulting model is
+GPA = 3.1225 - (0.00087 * Sleep Hours)
+
+Hypotheses
+For our model, we came up with the following hypotheses:
+H0:  = 0
+HA:  ≠ 0
+
+Interpretation
+Given that the p-value (0.848) is significantly higher than the standard alpha level of 0.05, we fail to reject the null hypothesis. There is insufficient evidence to claim that sleep duration has a linear relationship with a student’s GPA.
+
+## Short-comings and Improvements
+Results were self reported through a google form, so there could be response bias present in the data. For instance, some students may have inaccurate assumptions about their own study, or sleep habits. Students could also purposefully doctor their data to seem more studious then they actually are.
+
+Each student’s name appears only once, meaning the data doesn’t measure changes in GPA, study, and sleep habits over periods of time, and is therefore less realistic. If we collected many data points from a single student across a longer period of time, we could make our conclusion stronger by assessing more data.
+
+GPA can be affected by many variables besides sleep, such as difficulty of classes taken, differences between schools, socioeconomic status, and many other factors. In a future study, we could compare multiple variables, or reduce the range of our data collection to one district/school. 
+
+This data was collected across India and Bangladesh, from colleges in Delhi, Bangalore, and other large cities. Therefore, it is not representative of all college students. If we expanded our data collection to students from colleges around the world, we could get a more accurate representation of the global student body.
+
+
+## Discussion
+Many people have claimed that a poor academic performance may be a result of poor sleep. They say that getting a few more hours of sleep instead of studying is actually more beneficial. We tested this by using a self reported survey of 2,000 students from South Asia from August 2023 to May 2024. By performing our hypothesis test to see if the slope of the linear relationship between sleep and GPA is not 0, we got a p-value of 0.848, failing to reject the null hypothesis. We do not have evidence that the slope of the relationship between sleep and GPA is different from 0. This is not to say that sleep doesn’t have an effect on GPA, but that more statistical evidence is needed to support it. Some of the evidence that may support this could come from the shortcomings and improvements mentioned above.
+
+## References
+Kumar, Sumit. “Student Lifestyle Dataset.” Kaggle.com, 2024, www.kaggle.com/datasets/steve1215rogg/student-lifestyle-dataset.
